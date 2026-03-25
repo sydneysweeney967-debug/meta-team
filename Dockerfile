@@ -1,9 +1,13 @@
-FROM php:8.2-apache
+FROM debian:bookworm-slim
 
-RUN a2dismod mpm_event || true
-RUN a2dismod mpm_worker || true
-RUN a2enmod mpm_prefork
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    php \
+    libapache2-mod-php \
+    && apt-get clean
 
 COPY . /var/www/html/
 
 EXPOSE 80
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]
